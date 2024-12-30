@@ -16,6 +16,10 @@ public class PasswordVerifier {
     }
 
     public List<String> verifyPassword(String password) {
+        if (this.rules.size() == 0) {
+            throw new RuntimeException("There are no rules configured");
+        }
+        
         return this.rules.stream()
                 .filter(rule -> !rule.apply(password).passed())
                 .map(rule -> rule.apply(password).reason())

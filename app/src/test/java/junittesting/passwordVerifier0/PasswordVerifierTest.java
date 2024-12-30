@@ -1,6 +1,7 @@
 package junittesting.passwordVerifier0;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.function.Function;
@@ -42,6 +43,14 @@ public class PasswordVerifierTest {
         verifier.addRule(makePassingRule());
         var errors = verifier.verifyPassword("any value");
         assertTrue(errors.getFirst().contains("fake reason"));
+    }
+
+    @TestVerifyPassword
+    void withNoRulesThrowsException() {
+        var verifier = makeVerifier();
+        assertThrows(RuntimeException.class, () -> {
+            verifier.verifyPassword("any value");
+        });
     }
 
     private PasswordVerifier makeVerifierWithPassingRule() {
