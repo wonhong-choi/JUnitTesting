@@ -3,63 +3,45 @@ package junittesting.passwordVerifier0;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.List;
 import java.util.function.Function;
 
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-
 public class PasswordVerifierTest {
-    PasswordVerifier verifier = new PasswordVerifier();
-    List<String> errors;
 
-    @Nested
-    class WithAFailingRule {
-
-        @TestVerifyPassword
-        void returnsErrors() {
-            var varifier = makeVerifierWithFailedRule("fake reason");
-            var errors = varifier.verifyPassword("any value");
-            assertTrue(errors.getFirst().contains("fake reason"));
-        }
-
-        @Test
-        void hasExactlyOneError() {
-            var varifier = makeVerifierWithFailedRule("fake reason");
-            var errors = varifier.verifyPassword("any value");
-            assertEquals(1, errors.size());
-        }
+    @TestVerifyPassword
+    void withAFailingRuleReturnsErrors() {
+        var varifier = makeVerifierWithFailedRule("fake reason");
+        var errors = varifier.verifyPassword("any value");
+        assertTrue(errors.getFirst().contains("fake reason"));
     }
 
-    @Nested
-    class WithAPassingRule {
-
-        @TestVerifyPassword
-        void hasNoErrors() {
-            var verifier = makeVerifierWithPassingRule();
-            var errors = verifier.verifyPassword("any value");
-            assertEquals(0, errors.size());
-        }
+    @TestVerifyPassword
+    void withAFailingRuleHasExactlyOneError() {
+        var varifier = makeVerifierWithFailedRule("fake reason");
+        var errors = varifier.verifyPassword("any value");
+        assertEquals(1, errors.size());
     }
 
-    @Nested
-    class WithAFailingAndPassingRule {
+    @TestVerifyPassword
+    void withAPassingRuleHasNoErrors() {
+        var verifier = makeVerifierWithPassingRule();
+        var errors = verifier.verifyPassword("any value");
+        assertEquals(0, errors.size());
+    }
 
-        @TestVerifyPassword
-        void hasOneError() {
-            var verifier = makeVerifierWithFailedRule("fake reason");
-            verifier.addRule(makePassingRule());
-            var errors = verifier.verifyPassword("any value");
-            assertEquals(1, errors.size());
-        }
+    @TestVerifyPassword
+    void withAFailingAndPassingRuleHasOneError() {
+        var verifier = makeVerifierWithFailedRule("fake reason");
+        verifier.addRule(makePassingRule());
+        var errors = verifier.verifyPassword("any value");
+        assertEquals(1, errors.size());
+    }
 
-        @TestVerifyPassword
-        void errorTextBelongsToFailedRule() {
-            var verifier = makeVerifierWithFailedRule("fake reason");
-            verifier.addRule(makePassingRule());
-            var errors = verifier.verifyPassword("any value");
-            assertTrue(errors.getFirst().contains("fake reason"));
-        }
+    @TestVerifyPassword
+    void withAFailingAndPassingRuleErrorTextBelongsToFailedRule() {
+        var verifier = makeVerifierWithFailedRule("fake reason");
+        verifier.addRule(makePassingRule());
+        var errors = verifier.verifyPassword("any value");
+        assertTrue(errors.getFirst().contains("fake reason"));
     }
 
     private PasswordVerifier makeVerifierWithPassingRule() {
