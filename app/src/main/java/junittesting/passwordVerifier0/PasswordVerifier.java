@@ -1,11 +1,22 @@
 package junittesting.passwordVerifier0;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class PasswordVerifier {
-    public List<String> verifyPassword(String password, List<Function<String, VerifyResult>> rules) {
-        return rules.stream()
+    private List<Function<String, VerifyResult>> rules;
+
+    public PasswordVerifier() {
+        this.rules = new ArrayList<>();
+    }
+
+    public void addRule(Function<String, VerifyResult> rule) {
+        this.rules.add(rule);
+    }
+
+    public List<String> verifyPassword(String password) {
+        return this.rules.stream()
                 .filter(rule -> !rule.apply(password).passed())
                 .map(rule -> rule.apply(password).reason())
                 .toList();
