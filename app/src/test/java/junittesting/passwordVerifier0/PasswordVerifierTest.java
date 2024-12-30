@@ -19,20 +19,19 @@ public class PasswordVerifierTest {
 
         @BeforeEach
         void addFakeRule() {
-            Function<String, VerifyResult> fakeRule = (password) -> {
-                return new VerifyResult(false, "fake reason");
-            };
-            verifier.addRule(fakeRule);
-            errors = verifier.verifyPassword("any value");
         }
 
         @TestVerifyPassword
-        void givenAFailingRuleReturnsErrors() {
+        void returnsErrors() {
+            var varifier = makeVerifierWithFailedRule("fake reason");
+            var errors = varifier.verifyPassword("any value");
             assertTrue(errors.getFirst().contains("fake reason"));
         }
 
         @Test
-        void givenAFailingRuleHasExactlyOneError() {
+        void hasExactlyOneError() {
+            var varifier = makeVerifierWithFailedRule("fake reason");
+            var errors = varifier.verifyPassword("any value");
             assertEquals(1, errors.size());
         }
     }
@@ -40,17 +39,10 @@ public class PasswordVerifierTest {
     @Nested
     class WithAPassingRule {
 
-        @BeforeEach
-        void addFakeRule() {
-            Function<String, VerifyResult> fakeRule = (password) -> {
-                return new VerifyResult(true, "");
-            };
-            verifier.addRule(fakeRule);
-            errors = verifier.verifyPassword("any value");
-        }
-
         @TestVerifyPassword
         void hasNoErrors() {
+            var verifier = makeVerifierWithPassingRule();
+            var errors = verifier.verifyPassword("any value");
             assertEquals(0, errors.size());
         }
     }
@@ -58,29 +50,46 @@ public class PasswordVerifierTest {
     @Nested
     class WithAFailingAndPassingRule {
 
-        @BeforeEach
-        void addFakeRules() {
-            Function<String, VerifyResult> fakeRulePass = (password) -> {
-                return new VerifyResult(true, "fake success");
-            };
-            Function<String, VerifyResult> fakeRuleFail = (password) -> {
-                return new VerifyResult(false, "fake reason");
-            };
-
-            verifier.addRule(fakeRulePass);
-            verifier.addRule(fakeRuleFail);
-            errors = verifier.verifyPassword("any value");
-        }
-
         @TestVerifyPassword
         void hasOneError() {
+            var verifier = makeVerifierWithFailedRule("fake reason");
+            verifier.addRule(makePassingRule());
+            var errors = verifier.verifyPassword("any value");
             assertEquals(1, errors.size());
         }
 
         @TestVerifyPassword
         void errorTextBelongsToFailedRule() {
+            var verifier = makeVerifierWithFailedRule("fake reason");
+            verifier.addRule(makePassingRule());
+            var errors = verifier.verifyPassword("any value");
             assertTrue(errors.getFirst().contains("fake reason"));
         }
     }
 
+    private PasswordVerifier makeVerifierWithPassingRule() {
+        var verifier = makeVerifier();
+        verifier.addRule(makePassingRule());
+        return verifier;
+    }
+
+    private PasswordVerifier makeVerifierWithFailedRule(String reason) {
+        var verifier = makeVerifier();
+        Function<String, VerifyResult> fakeRule = (password) -> {
+            return new VerifyResult(false, reason);
+        };
+        verifier.addRule(fakeRule);
+        return verifier;
+    }
+
+    private PasswordVerifier makeVerifier() {
+        return new PasswordVerifier();
+    }
+
+    private Function<String, VerifyResult> makePassingRule() {
+        Function<String, VerifyResult> fakeRule = (password) -> {
+            return new VerifyResult(true, "");
+        };
+        return fakeRule;
+    }
 }
