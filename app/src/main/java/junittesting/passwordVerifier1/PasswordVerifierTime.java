@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 import junittesting.passwordVerifier0.VerifyResult;
 
@@ -13,16 +12,16 @@ public class PasswordVerifierTime {
     private final List<DayOfWeek> WEEKENDS = new ArrayList<>(Arrays.asList(DayOfWeek.SUNDAY, DayOfWeek.SATURDAY));
 
     private List<Function<String, VerifyResult>> rules;
-    private Supplier<DayOfWeek> getDayOfWeekSupplier;
+    private TimeProvider timeProvider;
     
 
-    public PasswordVerifierTime(List<Function<String, VerifyResult>> rules, Supplier<DayOfWeek> getDayOfWeekSupplier) {
+    public PasswordVerifierTime(List<Function<String, VerifyResult>> rules, TimeProvider timeProvider) {
         this.rules = rules;
-        this.getDayOfWeekSupplier = getDayOfWeekSupplier;
+        this.timeProvider = timeProvider;
     }
 
     public List<String> verifyPassword(String password) {
-        if(WEEKENDS.contains(this.getDayOfWeekSupplier.get())){
+        if(WEEKENDS.contains(this.timeProvider.getDay())){
             throw new RuntimeException("It's the weekend!");
         }
 
