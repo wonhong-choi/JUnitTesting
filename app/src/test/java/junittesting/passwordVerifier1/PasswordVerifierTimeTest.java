@@ -11,9 +11,10 @@ public class PasswordVerifierTimeTest {
 
     @TestVerifyPassword
     void onWeekendsThrowsExceptions() {
-        var varifier = new PasswordVerifierTime();
         Supplier<DayOfWeek> alwaysSunday = () -> DayOfWeek.SUNDAY;
-        assertThatThrownBy(() -> varifier.verifyPassword("any value", null, alwaysSunday))
+        var varifier = new PasswordVerifierTime(null, alwaysSunday);
+
+        assertThatThrownBy(() -> varifier.verifyPassword("any value"))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessageContaining("It's the weekend");
     }
