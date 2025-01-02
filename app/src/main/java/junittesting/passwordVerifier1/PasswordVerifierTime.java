@@ -26,6 +26,6 @@ public class PasswordVerifierTime {
             throw new RuntimeException("It's the weekend!");
         }
 
-        return null;
+        return Arrays.asList();
     }
 }
