@@ -7,13 +7,15 @@ import junittesting.passwordVerifier0.VerifyResult;
 
 public class PasswordVerifier2 {
     private Logger logger;
+    private List<Function<String, VerifyResult>> rules;
 
-    public PasswordVerifier2(Logger logger) {
+    public PasswordVerifier2(Logger logger, List<Function<String, VerifyResult>> rules) {
         this.logger = logger;
+        this.rules = rules;
     }
 
-    public boolean verifyPassword(String password, List<Function<String, VerifyResult>> rules) {
-        var failed = rules.stream()
+    public boolean verifyPassword(String password) {
+        var failed = this.rules.stream()
                 .map(each -> each.apply(password))
                 .filter(each -> !each.passed())
                 .toList();

@@ -17,10 +17,10 @@ public class PasswordVerifier2Test {
             }
         };
 
-        PasswordVerifier2 verifier = new PasswordVerifier2(mockLogger);
+        PasswordVerifier2 verifier = new PasswordVerifier2(mockLogger, Collections.emptyList());
 
 
-        verifier.verifyPassword("any value", Collections.emptyList());
+        verifier.verifyPassword("any value");
 
         assertThat(mockLogger.written).contains("pass");
     }
