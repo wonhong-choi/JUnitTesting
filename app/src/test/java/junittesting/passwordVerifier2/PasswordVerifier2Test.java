@@ -8,8 +8,6 @@ import junittesting.passwordVerifier0.TestVerifyPassword;
 public class PasswordVerifier2Test {
     @TestVerifyPassword
     void onWhenAllRulesPassPrintPass() {
-        PasswordVerifier2 verifier = new PasswordVerifier2();
-
         var mockLogger = new Logger() {
             private String written;
             
@@ -19,7 +17,10 @@ public class PasswordVerifier2Test {
             }
         };
 
-        verifier.verifyPassword("any value", Collections.emptyList(), mockLogger);
+        PasswordVerifier2 verifier = new PasswordVerifier2(mockLogger);
+
+
+        verifier.verifyPassword("any value", Collections.emptyList());
 
         assertThat(mockLogger.written).contains("pass");
     }

@@ -6,17 +6,23 @@ import java.util.function.Function;
 import junittesting.passwordVerifier0.VerifyResult;
 
 public class PasswordVerifier2 {
-    public boolean verifyPassword(String password, List<Function<String, VerifyResult>> rules, Logger logger) {
+    private Logger logger;
+
+    public PasswordVerifier2(Logger logger) {
+        this.logger = logger;
+    }
+
+    public boolean verifyPassword(String password, List<Function<String, VerifyResult>> rules) {
         var failed = rules.stream()
                 .map(each -> each.apply(password))
                 .filter(each -> !each.passed())
                 .toList();
         if (failed.isEmpty()) {
-            logger.info("passed");
+            this.logger.info("passed");
             return true;
         }
 
-        logger.info("fail");
+        this.logger.info("fail");
         return false;
     }
 }
