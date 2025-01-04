@@ -1,11 +1,13 @@
 package junittesting.passwordVerifier2;
 
-import java.text.MessageFormat;
+public interface ComplecatedLogger extends Logger{
 
-public class ComplecatedLogger implements Logger {
+    public void info(String txt);
 
-    public void info(String txt) {
-        System.out.println(MessageFormat.format("INFO: {0}", txt));
-    }
+    public void debug(String txt, Object object);
+
+    public void warn(String txt);
+
+    public void error(String txt, String location, String stackTrace);
 
 }

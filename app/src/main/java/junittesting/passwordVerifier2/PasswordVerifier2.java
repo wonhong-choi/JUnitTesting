@@ -6,10 +6,10 @@ import java.util.function.Function;
 import junittesting.passwordVerifier0.VerifyResult;
 
 public class PasswordVerifier2 {
-    private Logger logger;
+    private ComplecatedLogger logger;
     private List<Function<String, VerifyResult>> rules;
 
-    public PasswordVerifier2(Logger logger, List<Function<String, VerifyResult>> rules) {
+    public PasswordVerifier2(ComplecatedLogger logger, List<Function<String, VerifyResult>> rules) {
         this.logger = logger;
         this.rules = rules;
     }
