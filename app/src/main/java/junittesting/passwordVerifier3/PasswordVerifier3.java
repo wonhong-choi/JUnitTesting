@@ -9,14 +9,23 @@ import junittesting.passwordVerifier2.ComplicatedLogger;
 public class PasswordVerifier3 {
     private ComplicatedLogger logger;
     private ConfigurationService configurationService;
+    private MaintenanceWindow maintenanceWindow;
+    private List<Function<String, VerifyResult>> rules;
 
-    public PasswordVerifier3(ComplicatedLogger logger, ConfigurationService configurationService) {
+    public PasswordVerifier3(ComplicatedLogger logger, ConfigurationService configurationService, MaintenanceWindow maintenanceWindow, List<Function<String, VerifyResult>> rules) {
         this.logger = logger;
         this.configurationService = configurationService;
+        this.maintenanceWindow = maintenanceWindow;
+        this.rules = rules;
     }
 
-    public boolean verifyPassword(String password, List<Function<String, VerifyResult>> rules) {
-        var failed = rules.stream()
+    public boolean verifyPassword(String password) {
+        if (maintenanceWindow.isUnderMaintenance()) {
+            log("Under Maintenance");
+            return false;
+        }
+
+        var failed = this.rules.stream()
                 .map(each -> each.apply(password))
                 .filter(each -> !each.passed())
                 .toList();
