@@ -8,7 +8,7 @@ import junittesting.passwordVerifier0.TestVerifyPassword;
 public class PasswordVerifier2Test {
     @TestVerifyPassword
     void onWhenAllRulesPassPrintPass() {
-        class MockLogger extends RealComplecatedLogger{
+        class MockLogger extends RealComplicatedLogger{
             private String infoWritten;
 
             @Override

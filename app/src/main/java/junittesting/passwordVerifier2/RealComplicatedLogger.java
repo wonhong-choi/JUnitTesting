@@ -1,6 +1,6 @@
 package junittesting.passwordVerifier2;
 
-public class RealComplecatedLogger implements ComplecatedLogger {
+public class RealComplicatedLogger implements ComplicatedLogger {
 
     @Override
     public void info(String txt) {

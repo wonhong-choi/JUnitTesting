@@ -1,6 +1,6 @@
 package junittesting.passwordVerifier2;
 
-public interface ComplecatedLogger extends Logger{
+public interface ComplicatedLogger extends Logger {
 
     public void info(String txt);
 
